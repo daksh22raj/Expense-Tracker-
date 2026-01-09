@@ -25,13 +25,16 @@ const Login = () => {
       navigate('/');
     } catch (err) {
       if (err.response) {
-        
         setError(err.response.data?.message || 'Login failed. Please check your credentials.');
       } else if (err.request) {
-        
-        setError('Cannot connect to server. Please make sure the backend server is running on port 5000.');
+        // Check if we're in production and backend is not configured
+        const isProduction = window.location.hostname.includes('github.io');
+        if (isProduction) {
+          setError('Backend server is not configured. Please deploy your backend and update the API URL in frontend/src/config/api.js');
+        } else {
+          setError('Cannot connect to server. Please make sure the backend server is running on port 5000.');
+        }
       } else {
-       
         setError('An error occurred. Please try again.');
       }
     } finally {
