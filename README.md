@@ -175,6 +175,19 @@ ETS-MERN/
 ### Frontend (.env)
 - `REACT_APP_API_URL` - Backend API URL
 
+## GitHub Pages Deployment
+
+This project includes a `.nojekyll` file to prevent GitHub Pages from processing the repository with Jekyll (which would cause errors with React/Node.js files).
+
+**Important:** If you're deploying to GitHub Pages:
+1. The `.nojekyll` file in the root directory tells GitHub Pages to skip Jekyll processing
+2. Make sure `node_modules` is not committed to git (it's in `.gitignore`)
+3. If `node_modules` was previously committed, remove it:
+   ```bash
+   git rm -r --cached frontend/node_modules backend/node_modules
+   git commit -m "Remove node_modules from git tracking"
+   ```
+
 ## Deployment
 
 ### Backend Deployment (Heroku/Railway/Render)
