@@ -25,13 +25,9 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
-  // Basename for GitHub Pages deployment
-  // This matches the repository name in the GitHub Pages URL
-  const basename = '/Expense-Tracker-';
-  
   return (
     <AuthProvider>
-      <Router basename={basename}>
+      <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -54,4 +50,3 @@ function App() {
 }
 
 export default App;
-
