@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -29,17 +30,25 @@ app.get("/api/health", (req, res) => {
 // ==============================
 // Serve React Frontend (PRODUCTION)
 // ==============================
-if (process.env.NODE_ENV === "production") {
-  const frontendBuildPath = path.join(__dirname, "..", "frontend", "build");
+const frontendBuildPath = path.join(__dirname, "..", "frontend", "build");
+const isProduction = process.env.NODE_ENV === "production";
+const buildExists = fs.existsSync(path.join(frontendBuildPath, "index.html"));
 
+if (isProduction && buildExists) {
   console.log("Serving frontend from:", frontendBuildPath);
-
-  // Serve static files
   app.use(express.static(frontendBuildPath));
-
-  // Catch ALL non-API routes and return React app
-  app.get("*", (req, res) => {
+  // Catch non-API routes and return React app
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) return next();
     res.sendFile(path.join(frontendBuildPath, "index.html"));
+  });
+} else if (isProduction && !buildExists) {
+  console.warn("Production mode but frontend build not found at", frontendBuildPath);
+  app.get("/", (req, res) => {
+    res.status(503).json({
+      error: "Frontend not built",
+      message: "Run 'npm run build' in the repo root so the frontend is built before deploy.",
+    });
   });
 }
 

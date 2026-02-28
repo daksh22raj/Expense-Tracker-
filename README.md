@@ -190,7 +190,28 @@ This project includes a `.nojekyll` file to prevent GitHub Pages from processing
 
 ## Deployment
 
-### Backend Deployment (Heroku/Railway/Render)
+### Deploy on Render (recommended)
+
+The repo includes a `render.yaml` so Render can build and run the app correctly.
+
+1. **Push the repo to GitHub** and connect the repo in [Render](https://render.com).
+2. **Create a new Web Service** and let Render use the `render.yaml` (or set these manually):
+   - **Root Directory:** leave empty (use repo root).
+   - **Build Command:** `npm install && npm run build`
+   - **Start Command:** `npm start`
+3. **Environment variables** (in Render dashboard):
+   - `NODE_ENV` = `production`
+   - `MONGODB_URI` = your MongoDB Atlas connection string
+   - `JWT_SECRET` = a long random string (e.g. from `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)
+4. **Frontend API URL:** In the frontend, the app uses the same origin in production, or set `REACT_APP_API_URL` in the frontend build to your Render URL (e.g. `https://your-app.onrender.com`) if your API is on a different subdomain.
+
+If you see **"Cannot GET /"** on Render, it usually means:
+- **NODE_ENV** is not set to `production`, or  
+- The **Build Command** did not run `npm run build` (so the React app was never built).  
+
+Fix: set `NODE_ENV=production` and use Build Command `npm install && npm run build`.
+
+### Backend-only deployment (Heroku/Railway/Render)
 
 1. Set environment variables in your hosting platform:
    - `MONGODB_URI`

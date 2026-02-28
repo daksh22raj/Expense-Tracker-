@@ -1,0 +1,21 @@
+# Render Blueprint for ETS-MERN (single web service: backend + frontend)
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: expense-tracker
+    runtime: node
+
+    # Use repo root so both backend and frontend are available
+    rootDir: .
+
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
